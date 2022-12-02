@@ -1,0 +1,37 @@
+.info {
+  width: 100%;
+  margin-bottom: .8rem;
+  display: flex;
+  justify-content: start;
+  padding: 0.5em;
+}
+
+
+.infoStudent {
+ width: 70%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.infoStudent span {
+  min-width: 250px;
+  text-transform: uppercase;
+  font-weight: normal;
+  text-align: left;
+}
+
+.actionsStudents button {
+  border-radius: .5rem;
+  width: 100px;
+  margin-left: 0.5em;
+  border: none;
+  outline: none;
+}
+  .infoHeader{
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .archivado {
+    background-color: rgba(122, 62, 43, 0.226);
+  }

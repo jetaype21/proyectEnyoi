@@ -1,0 +1,43 @@
+.container {
+  flex: 8;
+}
+
+.containerCardsTeam {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  gap: 1rem;
+}
+
+
+.itemCard {
+  background-color: pink;
+}
+
+.teamsForm {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.containerForm {
+  background-color: pink;
+}
+
+.teamsForm input,
+.teamsForm select
+ {
+  outline: none;
+  padding: 0.5rem;
+  border: 1px solid pink;
+  border-radius: .5rem;
+}
+
+.teamsForm button {
+  padding: 0.5em;
+  background-color: #e712cb;
+  color: white;
+  border-radius: .5rem;
+  border: none;
+  padding: 0.5em;
+}

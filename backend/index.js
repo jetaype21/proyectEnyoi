@@ -5,6 +5,8 @@ const cors = require('cors')
 const connection = require('./db')
 const userRoutes = require('./routes/users')
 const authRoutes = require("./routes/auth");
+const studentsRoutes = require("./routes/students");
+const teamsRoutes = require("./routes/teams");
 const jwt = require('jsonwebtoken')
 const app = express()
 
@@ -20,6 +22,8 @@ app.use(
 // routes
 app.use('/api/users', userRoutes)
 app.use('/api/auth', authRoutes)
+app.use('/api/students', studentsRoutes)
+app.use('/api/teams', teamsRoutes)
 app.get('/', (req, res) => {
   res.send('hello')
 })

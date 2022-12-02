@@ -1,3 +1,8 @@
+.separetedContainer {
+	width: 100%;
+	display: flex;
+}
+
 .navbar {
 	width: 100%;
 	height: 70px;
@@ -24,4 +29,35 @@
 	font-size: 14px;
 	cursor: pointer;
 	margin-right: 20px;
+}
+
+/* menu */
+
+.drawer_left {
+	flex: 2;
+	background-color: rgba(231, 223, 223, 0.747);
+	display: flex;
+	flex-direction: column;
+	padding: .5rem;
+}
+
+.drawer_left a {
+	color: rgb(75, 72, 72);
+	text-decoration: none;
+}
+
+/* contenido de la derecha */
+.main_container {
+	flex: 8;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+p {
+	font-weight: lighter;
+	text-align: center;
+	font-style: italic;
+	font-size: 1.5em;
 }

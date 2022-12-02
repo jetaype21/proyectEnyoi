@@ -1,0 +1,26 @@
+.container {
+  flex: 8;
+  padding: 0.8em;
+}
+
+.studentForm {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.studentForm input {
+  border: 1px solid gray;
+  border-radius: .5rem;
+  padding: 0.3rem;
+}
+
+.studentForm button {
+  border: none;
+  outline: none;
+  background-color: rgb(104, 5, 91);
+  border-radius: .5rem;
+  color: white;
+  padding: .5rem;
+  font-size: 17px;
+}

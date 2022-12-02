@@ -60,12 +60,12 @@ const Login = () => {
 					</form>
 				</div>
 				<div className={styles.right}>
-					<h1>New Here ?</h1>
+					{/* <h1>New Here ?</h1>
 					<Link to="/signup">
 						<button type="button" className={styles.white_btn}>
 							Sing Up
 						</button>
-					</Link>
+					</Link> */}
 				</div>
 			</div>
 		</div>
