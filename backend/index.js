@@ -7,6 +7,8 @@ const userRoutes = require('./routes/users')
 const authRoutes = require("./routes/auth");
 const studentsRoutes = require("./routes/students");
 const teamsRoutes = require("./routes/teams");
+const asignaturas = require("./routes/asignaturas");
+const all = require("./routes/all");
 const jwt = require('jsonwebtoken')
 const app = express()
 
@@ -24,9 +26,18 @@ app.use('/api/users', userRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/students', studentsRoutes)
 app.use('/api/teams', teamsRoutes)
+app.use('/api/asignaturas', asignaturas)
+app.use('/api/all', all)
 app.get('/', (req, res) => {
   res.send('hello')
 })
+
+// "nombres": "juan eber 2",
+//   "apellidos": "taype escobar",
+//   "email": "taype2@gmail.com",
+//   "archivado": false,
+//   "grupo": "h91",
+//   "asignatura": "fa"
 
 app.post("/api/token", (req, res) => {
   const user = {

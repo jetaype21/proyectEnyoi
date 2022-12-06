@@ -1,20 +1,23 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { StudentsContext } from "../../App";
+import Select from "react-select";
+import { DataContext } from "../../App";
+import axiosConfig from "../../config/axiosConfig";
 import { StudentItem } from "./student/studentItem";
 import styles from "./students.module.css";
 
 export const Students = () => {
-  const [students, setstudents] = useState([]);
+  const [estudiantes, setEstudiantes] = useState([]);
+  const [grupos, setGrupo] = useState([]);
   const [error, setError] = useState("");
-
   const [data, setData] = useState({
     nombres: "",
     apellidos: "",
     email: "",
+    archivado: false,
+    asignaturas: [],
+    grupo: "",
   });
-
-  const context = useContext(StudentsContext);
 
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value });
@@ -23,8 +26,8 @@ export const Students = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://localhost:8000/api/students";
-      const { data: res } = await axios.post(url, data);
+      const url = "/students";
+      const { data: res } = await axiosConfig.post(url, data);
       console.log(res.message);
     } catch (error) {
       if (
@@ -37,32 +40,41 @@ export const Students = () => {
     }
   };
 
+  const { students, teams } = useContext(DataContext);
+
   // actualozar archivado
   const handleArchivado = (student) => {
-    const options = {
-      method: "PUT",
-      url: "http://localhost:8000/api/students",
-      data: {
+    const url = "/students"
+    axiosConfig.put(url, {
         nombres: student.nombres,
         apellidos: student.apellidos,
         email: student.email,
         archivado: student.archivado,
-      },
-    };
-
-    axios
-      .request(options)
-      .then(function (response) {
+        grupo: student.grupo,
+        asignaturas: student.asignaturas
       })
-      .catch(function (error) {
-        console.error(error);
-      });
-  }
+
+  };
+
+  const handleTeams = (e) => {
+    let index = e.currentTarget.options.selectedIndex;
+
+    const nombre = e.currentTarget.options[index].value;
+    const valor = grupos.filter((grupo) => grupo.nombre === nombre);
+    // console.log(valor[0]);
+
+    setData({
+      ...data,
+      grupo: valor[0].nombre,
+      asignaturas: valor[0].asignaturas
+    });
+  };
 
   useEffect(() => {
-    setstudents(context)
-  }, [context, students]);
-  
+    setEstudiantes(students);
+    setGrupo(teams);
+    // console.log(estudiantes);
+  }, [students]);
 
   return (
     <section className={styles.container}>
@@ -76,6 +88,7 @@ export const Students = () => {
         Crear estudiante
       </button>
 
+      {/*modal de crear estudiantes  */}
       <div
         className="modal fade"
         id="modalStudent"
@@ -125,6 +138,14 @@ export const Students = () => {
                   required
                   className={styles.input}
                 />
+
+                <label>selecciona materias:</label>
+                <select onChange={(e) => handleTeams(e)}>
+                  {grupos.map((grupo) => (
+                    <option value={grupo.nombre}>{grupo.nombre}</option>
+                  ))}
+                </select>
+
                 {error && <div className={styles.error_msg}>{error}</div>}
                 <button type="submit" className={styles.green_btn}>
                   Crear
@@ -143,7 +164,8 @@ export const Students = () => {
           </div>
         </div>
       </div>
-      {students.length === 0 ? (
+
+      {estudiantes.length === 0 ? (
         <b className="mt-5">No hay estudiantes por favor ingrese uno</b>
       ) : (
         <ul style={{ width: "100%" }}>
@@ -153,10 +175,15 @@ export const Students = () => {
               <span style={{ fontWeight: "bold" }}>apellidos</span>
               <span style={{ fontWeight: "bold" }}>email</span>
             </section>
-            <section className="actionsStudents">acciones</section>
+            <section className="actionsStudents" >
+              <span style={{ fontWeight: "bold" }} className="mx-4">accion</span>
+              <span style={{ fontWeight: "bold" }} className="mx-4">
+                grupo
+              </span>
+            </section>
           </li>
 
-          {students.map((student, index) => (
+          {estudiantes.map((student, index) => (
             <StudentItem
               key={index}
               student={student}

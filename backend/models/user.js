@@ -15,7 +15,6 @@ userSchema.methods.generateAuthToken = function () {
     expiresIn: "7d",
   });
 
-
   return token;
 };
 

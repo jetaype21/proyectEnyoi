@@ -1,7 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
 import styles from "./styles.module.css";
+import axiosConfig from "../../config/axiosConfig";
 
 const Login = () => {
 	const [data, setData] = useState({ email: "", password: "" });
@@ -14,8 +13,8 @@ const Login = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const url = "http://localhost:8000/api/auth";
-			const { data: res } = await axios.post(url, data);
+			const url = "/auth";
+			const { data: res } = await axiosConfig.post(url, data);
 			localStorage.setItem("token", res.data);
 			window.location = "/";
 		} catch (error) {
@@ -34,7 +33,7 @@ const Login = () => {
 			<div className={styles.login_form_container}>
 				<div className={styles.left}>
 					<form className={styles.form_container} onSubmit={handleSubmit}>
-						<h1>Login to Your Account</h1>
+						<h1>Inicia sesion con tu cuenta</h1>
 						<input
 							type="email"
 							placeholder="Email"

@@ -6,25 +6,30 @@ import Login from "./components/Login";
 import { Students } from "./components/students/Students";
 import { Teams } from "./components/teams/Teams";
 import { createContext, useEffect, useState } from "react";
+import { Asignaturas } from "./components/asignatura/Asignatura";
 import axios from "axios";
 
-const StudentsContext = createContext();
+const DataContext = createContext();
 
 function App() {
   const user = localStorage.getItem("token");
-  const [students, setstudents] = useState([]);
+  const [data, setData] = useState({
+    students: [],
+    teams: [],
+    asignaturas: [],
+  });
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.reload();
   };
 
-
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/students")
-      .then((res) => setstudents(res.data.students));
-  }, [students]);
+    axios.get("http://localhost:8000/api/all").then(res => {
+      setData(res.data.data);
+      // setData({...res.data.data})
+    })
+  }, [data]);
 
   return (
     <>
@@ -37,29 +42,32 @@ function App() {
         </nav>
       )}
 
+      {/* {console.log(data)} */}
       <div className={styles.separetedContainer} style={{ minHeight: "500px" }}>
         {user && (
           <aside className={styles.drawer_left}>
             <Link to={"/"}>Home</Link>
             <Link to={"/students"}>estudiantes</Link>
             <Link to={"/teams"}>teams</Link>
+            <Link to={"/asignaturas"}>asignaturas</Link>
           </aside>
         )}
 
-        <StudentsContext.Provider value={students}>
+        <DataContext.Provider value={data}>
           <Routes>
-            {user && <Route path="/" exact element={<Main />} />}
+            {user && <Route path="/" exact element={<Main />} /> }
             <Route path="/signup" exact element={<Signup />} />
             <Route path="/login" exact element={<Login />} />
-            <Route path="/students" exact element={<Students />} />
-            <Route path="/teams" exact element={<Teams />} />
+            {user && <Route path="/students" exact element={<Students />} />}
+            {user && <Route path="/teams" exact element={<Teams />} />}
+            {user && <Route path="/asignaturas" exact element={<Asignaturas />} />}
             <Route path="/" element={<Navigate replace to="/login" />} />
           </Routes>
-        </StudentsContext.Provider>
+        </DataContext.Provider>
       </div>
     </>
   );
 }
 
-export {StudentsContext}
+export { DataContext };
 export default App;

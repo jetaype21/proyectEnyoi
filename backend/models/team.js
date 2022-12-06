@@ -3,7 +3,7 @@ const Joi = require("joi");
 
 const teamSchema = new mongoose.Schema({
   nombre: { type: String, required: true },
-  estudiantes: {type: Array, required: true}
+  asignaturas: {type: Array, required: true}
 });
 
 
@@ -12,7 +12,7 @@ const Team = mongoose.model("team", teamSchema);
 const validate = (data) => {
   const schema = Joi.object({
     nombre: Joi.string().required().label("nombre"),
-    estudiantes: Joi.array().required().label("estudiantes")
+    asignaturas: Joi.array().required().label("asignaturas")
   });
   return schema.validate(data);
 };

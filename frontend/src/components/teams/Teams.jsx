@@ -1,59 +1,41 @@
 import axios from "axios";
-import React, { useContext, useDebugValue, useEffect, useState } from "react";
-import { StudentsContext } from "../../App";
+import React, { useContext, useEffect, useState } from "react";
 import "./teams.css";
 import Select from "react-select";
 import { TeamStudents } from "./TeamStudents";
+import { DataContext } from "../../App";
+import axiosConfig from "../../config/axiosConfig";
 
 export const Teams = () => {
-  const [teams, setTeams] = useState([]);
-  const [studentsTeam, setstudentsTeam] = useState([]);
-  const [students, setstudents] = useState([]);
-  const [error, setError] = useState("");
+  const [grupos, setGrupos] = useState([]); //Todos los grupos
+  const [asignaturasTeam, setAsignaturasTeam] = useState([]); // todos las asignaturas en un mismo grupo
+
+  const [error, setError] = useState(""); //! errores
   const [data, setData] = useState({
     nombre: "",
-    estudiantes: [],
+    asignaturas: [],
   });
 
-  const context = useContext(StudentsContext);
+  const { teams, asignaturas } = useContext(DataContext);
 
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value });
   };
 
-  const hadleSelect = (e) => {
-    let studentsTeam = [];
-
-    e.map(
-      (item) =>
-        (studentsTeam = [
-          ...studentsTeam,
-          {
-            nombres: item.nombres,
-            apellidos: item.apellidos,
-            email: item.email,
-            archivado: item.archivado,
-          },
-        ])
-    );
-
-    setstudentsTeam(studentsTeam);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // console.log("studentsTeam");
-    // console.log(studentsTeam);
-
-    console.log({ ...data, estudiantes: studentsTeam });
     try {
-      const url = "http://localhost:8000/api/teams";
-      const { data: res } = await axios.post(url, {
+      const url = "/teams";
+      const { data: res } = await axiosConfig.post(url, {
         ...data,
-        estudiantes: studentsTeam,
+        asignaturas: asignaturasTeam,
       });
-      console.log(res.message);
+
+      setData({
+        nombre: "",
+        asignaturas: [],
+      });
     } catch (error) {
       if (
         error.response &&
@@ -65,25 +47,15 @@ export const Teams = () => {
     }
   };
 
+  const handleMaterias = (e) => {
+    setAsignaturasTeam(e);
+  };
+
   useEffect(() => {
-    let students = [];
+  
+    setGrupos([...teams]);
+  }, [teams]);
 
-    context.map((item, index) =>
-      item.archivado
-        ? null
-        : (students = [
-            ...students,
-            { ...item, value: item.nombres + index, label: item.nombres },
-          ])
-    );
-
-    // console.log(students);
-    setstudents(students);
-
-    axios.get("http://localhost:8000/api/teams").then((res) => {
-      setTeams(res.data.teams);
-    });
-  }, [context]);
   return (
     <section className="container p-5">
       <button
@@ -118,6 +90,7 @@ export const Teams = () => {
             </div>
             <div className="modal-body">
               <form onSubmit={handleSubmit} className={"teamsForm"}>
+                <label>Nombre del grupo:</label>
                 <input
                   type="text"
                   placeholder="nombres"
@@ -128,14 +101,15 @@ export const Teams = () => {
                   className={"input"}
                 />
 
+                <label>selecciona materias:</label>
                 <Select
-                  defaultValue={[students[1]]}
+                  defaultValue={[asignaturas[1]]}
                   isMulti
                   name="colors"
-                  options={students}
+                  options={asignaturas}
                   className="basic-multi-select"
                   classNamePrefix="select"
-                  onChange={(e) => hadleSelect(e)}
+                  onChange={(e) => handleMaterias(e)}
                 />
 
                 {error && <div className={"error_msg"}>{error}</div>}
@@ -157,21 +131,22 @@ export const Teams = () => {
         </div>
       </div>
 
-      {teams.length === 0 ? (
+      {grupos.length === 0 ? (
         <b>Empieze a crear un grupo</b>
       ) : (
         <section className="containerCardsTeam">
-          {teams?.map((team, index) => (
+          {grupos?.map((team, index) => (
             <div
+              key={index}
               className="card"
               style={{ width: "18rem", background: "pink" }}
             >
               <div className="card-body">
-                <h5 className="card-title h3">{team.nombre}</h5>
-                <p className="card-text fw-bold">Integrantes: </p>
+                <h5 className="card-title h3 text-center">{team.nombre}</h5>
+                <p className="card-text fw-lighter text-start mx-4">asignaturas: </p>
                 <ul className="list-group list-group-flush">
-                  {team.estudiantes.map((student, index) => (
-                    <TeamStudents key={index} list={student} />
+                  {team.asignaturas.map((asignaturas, index) => (
+                    <TeamStudents key={index} list={asignaturas} />
                   ))}
                 </ul>
               </div>

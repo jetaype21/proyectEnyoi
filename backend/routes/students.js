@@ -43,6 +43,25 @@ router.put("/", async (req, res) => {
   }
 });
 
+router.put("/teams", async (req, res) => {
+  try {
+    const { error } = validate(req.body);
+    if (error)
+      return res.status(400).send({ message: error.details[0].message });
+
+    const student = await Student.updateOne({ email: req.body.estudiante.email }, {$set: {grupo: req.body.grupo, asignaturas: [...req.body.asignaturas]}});
+    
+    res.status(201).send({
+      student,
+       message: "estudiante actualizado existosamente." 
+      });
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "errores internos por favor vuelva a intentar" });
+  }
+});
+
 router.get("/", async (req, res) => {
   try {
     
